@@ -1,0 +1,45 @@
+@charset "UTF-8";
+*{
+    margin: 0;
+    padding: 0;
+}
+header{
+    background-color:darkgray;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    padding: 0px;
+}
+.logo{
+    height: 143px;
+    width: auto;
+    
+}
+.head-cont{
+    display: flex;
+    /*justify-content: space-around;*/
+    margin: 0;
+}
+.a-head{
+    margin: 0;
+}
+.head-guay{
+    padding: 0px;
+}
+.head-text{
+    margin-left: 100px;
+}
+.gif{
+    height: 100px;
+    width: auto;
+}
+.inst{
+    margin: 25%;
+    height: 50px;
+    width: auto;
+}
+main{
+    margin-bottom: 150px;
+    min-height:calc(100vh - 15rem - 400px);
+}
+
+
