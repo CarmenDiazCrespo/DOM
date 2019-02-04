@@ -13,29 +13,40 @@ function objetos(vs){
     vs.addDirector(dir1);
     vs.addDirector(dir2);
     //Objetos Recursos
-    var re1= new Resource("59","www.w3school.com");
+    var re1= new Resource("59:20","www.w3school.com");
+    var re2= new Resource("229:10","www.gnula.nu");
+    var re3= new Resource("05:00","www.gnula.nu");
     //Objetos de production
     var pro1= new Movie("Red2","USA","2025-02-25");
     pro1.resource= re1;
     var pro2= new Movie("Caza Fantasma","USA","1984-12-5");
+    pro2.resource= re2;
     var pro3 = new Serie("Twin Peaks","USA", "1995-12-21");
-    var pro4 = new Movie("1408","USA", "1995-12-21");
+    pro3.resource= re3;
+    var pro4 = new Movie("1408","USA", "2007-06-22");
+    var pro5 = new Movie("Que se mueran los feos","España", "2010-06-24");
+    var pro6 = new Movie("LA tumba de las luciernagas","Japón", "1967-01-10");
+    pro6.image="imagenes/tumba.jpg";
     vs.addProduction(pro1);
     vs.addProduction(pro2);
     vs.addProduction(pro3);
     vs.addProduction(pro4);
+    vs.addProduction(pro5);
+    vs.addProduction(pro6);
     //objetos actor = persona
     var ac1= new Person("John","Cusack","","1970-8-28");
     var ac2= new Person("Samuel","L.Jackson","","1948-12-21");
-    var ac3= new Person("Manolo","Lopez","","1993-12-16");
+    var ac3= new Person("Javier","Cámara","Rodríguez","1967-1-19","imagenes/javier-camara.jpg");
+    var ac4= new Person("María del Carmen","García","y Maura","1945-09-15");
     vs.addActor(ac1);
     vs.addActor(ac2);
     vs.addActor(ac3);
+    vs.addActor(ac4);
     //objetos category
-    var cat1= new Category("Terror","Las películas que más miedo dan");
-    var cat2= new Category("Drama", "contexto serio, con un tono y una orientación más susceptible de inspirar tristeza y compasión. ");
-    var cat3= new Category("Anime", "Monitos japoneses");
-    var cat4= new Category("Aventuras", "Las mejores experiencias, las más arriesgadas");
+    var cat1= new Category("Comedia","Te partirás de risa.");
+    var cat2= new Category("Drama", "Contexto serio, con un tono y una orientación más susceptible de inspirar tristeza y compasión. ");
+    var cat3= new Category("Anime", "Monitos japoneses.");
+    var cat4= new Category("Aventuras", "Las mejores experiencias, las más arriesgadas.");
     vs.addCategory(cat1);
     vs.addCategory(cat2);
     vs.addCategory(cat3);
@@ -44,7 +55,15 @@ function objetos(vs){
     //Objetos de Coordenadas
     var c1 = new Coordinate(-1, 1);
     var c2 = new Coordinate(22, -22);
-    var c3 = new Coordinate(-13, 13);
+    var c3 = new Coordinate(-83, 13);
+
+    //Asignar producciones a categorias
+    vs.assignCategory(cat4, pro1);
+    vs.assignCategory(cat4, pro2);
+    vs.assignCategory(cat3, pro6);
+    vs.assignCategory(cat1, pro5);
+    vs.assignCategory(cat2, pro3);
+    vs.assignCategory(cat2, pro4);
 }
 function removeAllElements(elem){
 	while (elem.childNodes.length > 0){
@@ -53,11 +72,12 @@ function removeAllElements(elem){
 }
 function categoriesMenuPopulate(vs){
     //Recorremos las categorias.
+    var ini = document.getElementsByClassName("navbar-header");
     var ul = document.getElementsByClassName("submenu");
     var categorias = vs.categorias;
     var categoria = categorias.next();
 
-    //ini[0].addEventListener("click", initPopulate());
+    ini[0].addEventListener("click", initPopulate(vs));
     while (categoria.done !== true){
         var li = document.createElement("li");
         var a = document.createElement("a");
@@ -102,18 +122,20 @@ function initPopulate(vs) {
         while (categoria.done !== true){
             var divCol = document.createElement("div");
             divCol.setAttribute("class", "col-sm-12");
-
             var divCap = document.createElement("div");
             divCap.setAttribute("class", "caption");
-
-            var h2 = document.createElement("h2");
+            var h3 = document.createElement("h3");
+            var p = document.createElement("p");
             var a = document.createElement("a");
             a.setAttribute("href", "#");
-            a.appendChild(document.createTextNode(categoria.value.name));
-            a.addEventListener("click", categoryPopulate(categoria.value));
-            h2.appendChild(a);
-            divCap.appendChild(h2);
 
+            a.appendChild(document.createTextNode(categoria.value.name));
+            p.appendChild(document.createTextNode(categoria.value.description));
+            a.addEventListener("click", categoryPopulate(categoria.value));
+
+            h3.appendChild(a);
+            h3.appendChild(p);
+            divCap.appendChild(h3);
             divCol.appendChild(divCap);
             main.appendChild(divCol);
 
@@ -122,7 +144,7 @@ function initPopulate(vs) {
 
             while (!production.done) {
                 var col = document.createElement("div");
-                col.setAttribute("class", "col-sm-3");
+                col.setAttribute("class", "col-sm-2");
 
                 var divThumb = document.createElement("div");
                 divThumb.setAttribute("class", "thumbnail");
@@ -154,37 +176,37 @@ function initPopulate(vs) {
 }
 function showActors(vs){
     return function(){
-    var main = document.getElementById("div-main");
-    removeChildsElement(main);
+        var main = document.getElementById("div-main");
+        removeChildsElement(main);
 
-    var actors = vs.actors;
-    var actor = actors.next();
-    while (actor.done !== true){
-        var divCol = document.createElement("div");
-        divCol.setAttribute("class", "col-sm-4");
+        var actors = vs.actors;
+        var actor = actors.next();
+        while (actor.done !== true){
+            var divCol = document.createElement("div");
+            divCol.setAttribute("class", "col-sm-4");
 
-        var divThumb = document.createElement("div");
-        divThumb.setAttribute("class", "thumbnail");
-        var divCap = document.createElement("div");
-        divCap.setAttribute("class", "caption");
+            var divThumb = document.createElement("div");
+            divThumb.setAttribute("class", "thumbnail");
+            var divCap = document.createElement("div");
+            divCap.setAttribute("class", "caption");
 
-        var h4 = document.createElement("h4");
-        h4.appendChild(document.createTextNode(actor.value.name + " " + actor.value.lastname));
-        divCap.appendChild(h4);
+            var h4 = document.createElement("h4");
+            h4.appendChild(document.createTextNode(actor.value.name + " " + actor.value.lastname1));
+            divCap.appendChild(h4);
 
-        var a = document.createElement("a");
-        a.appendChild(document.createTextNode("+ informacion"));
-        a.setAttribute("class", "pull-right");
-        a.addEventListener("click", showActor(vs, actor.value));
-        divCap.appendChild(a);
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("+ informacion"));
+            a.setAttribute("class", "pull-right");
+            a.addEventListener("click", showActor(vs, actor.value));
+            divCap.appendChild(a);
 
-        divThumb.appendChild(divCap);
-        divCol.appendChild(divThumb);
-        main.appendChild(divCol);
+            divThumb.appendChild(divCap);
+            divCol.appendChild(divThumb);
+            main.appendChild(divCol);
 
-        actor = actors.next();
+            actor = actors.next();
+        }
     }
-}
 }
 function showDirectors(vs){
     return function () {
@@ -203,7 +225,7 @@ function showDirectors(vs){
             divCap.setAttribute("class", "caption");
 
             var h4 = document.createElement("h4");
-            h4.appendChild(document.createTextNode(director.value.name + " " + director.value.lastname));
+            h4.appendChild(document.createTextNode(director.value.name + " " + director.value.lastname1));
             divCap.appendChild(h4);
 
             var a = document.createElement("a");
@@ -231,9 +253,9 @@ function showActor(vs, actor) {
         var divThumb = document.createElement("div");
         divThumb.setAttribute("class", "thumbnail");
 
-        /*var img = document.createElement("img");
+        var img = document.createElement("img");
         img.setAttribute("src", actor.picture);
-        divThumb.appendChild(img);*/
+        divThumb.appendChild(img);
 
         var divInfo = document.createElement("div");
         divInfo.setAttribute("class", "col-sm-8");
@@ -251,14 +273,14 @@ function showActor(vs, actor) {
 
         while (production.done !== true) {
             var divCol = document.createElement("div");
-            divCol.setAttribute("class", "col-sm-3");
+            divCol.setAttribute("class", "col-sm-4");
 
             var divCar = document.createElement("div");
             divCar.setAttribute("class", "thumbnail");
 
-           /* var foto = document.createElement("img");
+            var foto = document.createElement("img");
             foto.setAttribute("src", production.value.image);
-            divCar.appendChild(foto);*/
+            divCar.appendChild(foto);
 
             var divCap = document.createElement("div");
             divCap.setAttribute("class", "caption");
@@ -296,9 +318,9 @@ function showDirector(vs, director) {
         var divThumb = document.createElement("div");
         divThumb.setAttribute("class", "thumbnail");
 
-        /*var img = document.createElement("img");
+        var img = document.createElement("img");
         img.setAttribute("src", director.picture);
-        divThumb.appendChild(img);*/
+        divThumb.appendChild(img);
 
         var divInfo = document.createElement("div");
         divInfo.setAttribute("class", "col-sm-8");
@@ -316,14 +338,14 @@ function showDirector(vs, director) {
 
         while (production.done !== true) {
             var divCol = document.createElement("div");
-            divCol.setAttribute("class", "col-sm-3");
+            divCol.setAttribute("class", "col-sm-4");
 
             var divCar = document.createElement("div");
             divCar.setAttribute("class", "thumbnail");
 
-            /*var foto = document.createElement("img");
+            var foto = document.createElement("img");
             foto.setAttribute("src", production.value.image);
-            divCar.appendChild(foto);*/
+            divCar.appendChild(foto);
 
             var divCap = document.createElement("div");
             divCap.setAttribute("class", "caption");
