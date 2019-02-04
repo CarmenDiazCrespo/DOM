@@ -4,7 +4,7 @@ function objetos(vs){
     //Creo los objetos que voy a utilizar.
     //Objetos usuarios
     var u1 = new User("kheiss","montoya@hotmail.com","Montoya123!");
-    var u2 = new User("kheiss22","montoya.diaz@hotmail.com","MontoyaDiaz123*");
+    var u2 = new User("kheiss22","montoya.diaz@hotmail.com","MontoyaDiaz123!");
     vs.addUser(u1);
     vs.addUser(u2);
     //objetos director = persona
@@ -13,7 +13,7 @@ function objetos(vs){
     vs.addDirector(dir1);
     vs.addDirector(dir2);
     //Objetos Recursos
-    var re1= new Resource("59:20","www.w3school.com");
+    var re1= new Resource("59","www.w3school.com");
     //Objetos de production
     var pro1= new Movie("Red2","USA","2025-02-25");
     pro1.resource= re1;
@@ -44,7 +44,7 @@ function objetos(vs){
     //Objetos de Coordenadas
     var c1 = new Coordinate(-1, 1);
     var c2 = new Coordinate(22, -22);
-    var c3 = new Coordinate(-333, 333);
+    var c3 = new Coordinate(-13, 13);
 }
 function removeAllElements(elem){
 	while (elem.childNodes.length > 0){
@@ -63,16 +63,301 @@ function categoriesMenuPopulate(vs){
         var a = document.createElement("a");
         a.setAttribute("href", "#");
         li.appendChild(a);
-        ul.appendChild(li);
+        ul[0].appendChild(li);
 
-        a.innerHTML= (categoria.value.name);
+        a.addEventListener("click", categoryPopulate(categoria.value));
+        a.appendChild(document.createTextNode(categoria.value.name));
+
         categoria = categorias.next();
     }
 }
-function init() {
-    var vs = VideoSystem.getInstance();
-    objetos(vs);
-    categoriesMenuPopulate(vs);
+function categoryPopulate(category) {
+    return function () {
+        var ul = document.getElementsByClassName("submenu");
+        removeChildsElement(ul);
+
+        var productions = vs.getProductionsCategory(category);
+        var production = productions.next();
+
+        while (production.done !== true) {
+            productionsCategoryPopulate(ul, production.value);
+            production = productions.next();
+        }
+    }
+}
+function initPopulate(vs) {
+    return function () {
+        var actores = document.getElementById("actores");
+        actores.addEventListener("click", showActors(vs));
+        var directores = document.getElementById("directores");
+        directores.addEventListener("click", showDirectors(vs));
+
+        var categorias = vs.categorias;
+		var categoria = categorias.next();
+		
+        var main = document.getElementById("div-main");
+
+        removeChildsElement(main);
+
+        while (categoria.done !== true){
+            var divCol = document.createElement("div");
+            divCol.setAttribute("class", "col-sm-12");
+
+            var divCap = document.createElement("div");
+            divCap.setAttribute("class", "caption");
+
+            var h2 = document.createElement("h2");
+            var a = document.createElement("a");
+            a.setAttribute("href", "#");
+            a.appendChild(document.createTextNode(categoria.value.name));
+            a.addEventListener("click", categoryPopulate(ategoria.value));
+            h2.appendChild(a);
+            divCap.appendChild(h2);
+
+            divCol.appendChild(divCap);
+            divSct1.appendChild(divCol);
+
+            var productions = videosystem.getProductionsCategory(categoria.value);
+            var production = productions.next();
+
+            while (!production.done) {
+                var col = document.createElement("div");
+                col.setAttribute("class", "col-sm-3");
+
+                var divThumb = document.createElement("div");
+                divThumb.setAttribute("class", "thumbnail");
+                divThumb.setAttribute("id", "divprod");
+
+                var img = document.createElement("img");
+                img.setAttribute("src", production.value.image);
+                img.setAttribute("class", "img-responsive")
+                divThumb.appendChild(img);
+
+                var cap = document.createElement("div");
+                cap.setAttribute("class", "caption");
+
+                var h4 = document.createElement("h4");
+                var a2 = document.createElement("a");
+                a2.setAttribute("href", "#");
+                a2.appendChild(document.createTextNode(production.value.title));
+                h4.appendChild(a2);
+                cap.appendChild(h4);
+
+                divThumb.appendChild(cap);
+                col.appendChild(divThumb);
+                divCap.appendChild(col);
+                production = productions.next();
+            }
+            category = categories.next();
+        }
+    }
+}
+function showActors(vs){
+    var main = document.getElementById("div-main");
+    removeChildsElement(main);
+
+    var actors = vs.actors;
+    var actor = actors.next();
+    while (actor.done !== true){
+        var divCol = document.createElement("div");
+        divCol.setAttribute("class", "col-sm-4");
+
+        var divThumb = document.createElement("div");
+        divThumb.setAttribute("class", "thumbnail");
+        var divCap = document.createElement("div");
+        divCap.setAttribute("class", "caption");
+
+        var h4 = document.createElement("h4");
+        h4.appendChild(document.createTextNode(actor.value.name + " " + actor.value.lastname));
+        divCap.appendChild(h4);
+
+        var a = document.createElement("a");
+        a.appendChild(document.createTextNode("+ informacion"));
+        a.setAttribute("class", "pull-right");
+        a.addEventListener("click", showActor(video, actor.value));
+        divCap.appendChild(a);
+
+        divThumb.appendChild(divCap);
+        divCol.appendChild(divThumb);
+        divSct1.appendChild(divCol);
+
+        actor = actors.next();
+    }
+}
+function showDirectors(vs){
+    return function () {
+        var main = document.getElementById("div-main");
+        removeChildsElement(main);
+
+        var directores = vs.directores;
+        var director = directores.next();
+        while (director.done !== true){
+            var divCol = document.createElement("div");
+            divCol.setAttribute("class", "col-sm-4");
+
+            var divThumb = document.createElement("div");
+            divThumb.setAttribute("class", "thumbnail");
+            var divCap = document.createElement("div");
+            divCap.setAttribute("class", "caption");
+
+            var h4 = document.createElement("h4");
+            h4.appendChild(document.createTextNode(director.value.name + " " + director.value.lastname));
+            divCap.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("+ informacion"));
+            a.setAttribute("class", "pull-right");
+            a.addEventListener("click", showDirector(video, director.value));
+            divCap.appendChild(a);
+
+            divThumb.appendChild(divCap);
+            divCol.appendChild(divThumb);
+            divSct1.appendChild(divCol);
+
+            director = directores.next();
+        }
+    }
+}
+function showActor(video, actor) {
+    return function () {
+        var main = document.getElementById("div-main");
+        removeChildsElement(main);
+
+        var divFoto = document.createElement("div");
+        divFoto.setAttribute("class", "col-sm-4");
+
+        var divThumb = document.createElement("div");
+        divThumb.setAttribute("class", "thumbnail");
+
+        /*var img = document.createElement("img");
+        img.setAttribute("src", actor.picture);
+        divThumb.appendChild(img);*/
+
+        var divInfo = document.createElement("div");
+        divInfo.setAttribute("class", "col-sm-8");
+
+        var name = document.createElement("h2");
+        name.appendChild(document.createTextNode(actor.name + " " + actor.lastname  + "("+ actor.born.toLocaleDateString() + ")"));
+        divInfo.appendChild(name);
+
+        var prod = document.createElement("h3");
+        prod.appendChild(document.createTextNode("Producciones:"));
+        divInfo.appendChild(prod);
+
+        var productions =video.getProductionsActor(actor);
+        var production = productions.next();
+
+        while (production.done !== true) {
+            var divCol = document.createElement("div");
+            divCol.setAttribute("class", "col-sm-3");
+
+            var divCar = document.createElement("div");
+            divCar.setAttribute("class", "thumbnail");
+
+           /* var foto = document.createElement("img");
+            foto.setAttribute("src", production.value.image);
+            divCar.appendChild(foto);*/
+
+            var divCap = document.createElement("div");
+            divCap.setAttribute("class", "caption");
+
+            var h4 = document.createElement("h4");
+            h4.appendChild(document.createTextNode(production.value.title));
+            divCap.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("+ informacion"));
+            a.setAttribute("class", "pull-right");
+            divCap.appendChild(a);
+
+            divCar.appendChild(divCap);
+            divCol.appendChild(divCar);
+            divInfo.appendChild(divCol);
+
+            production = productions.next();
+        }
+
+        divFoto.appendChild(divThumb);
+        divSct1.appendChild(divFoto);
+        divSct1.appendChild(divInfo);
+    }
 }
 
-window.onload = init();
+function showDirector(video, director) {
+    return function () {
+        var main = document.getElementById("div-main");
+        removeChildsElement(main);
+
+        var divFoto = document.createElement("div");
+        divFoto.setAttribute("class", "col-sm-4");
+
+        var divThumb = document.createElement("div");
+        divThumb.setAttribute("class", "thumbnail");
+
+        /*var img = document.createElement("img");
+        img.setAttribute("src", director.picture);
+        divThumb.appendChild(img);*/
+
+        var divInfo = document.createElement("div");
+        divInfo.setAttribute("class", "col-sm-8");
+
+        var name = document.createElement("h2");
+        name.appendChild(document.createTextNode(director.name + " " + director.lastname  + "("+ director.born.toLocaleDateString() + ")"));
+        divInfo.appendChild(name);
+
+        var prod = document.createElement("h3");
+        prod.appendChild(document.createTextNode("Producciones:"));
+        divInfo.appendChild(prod);
+
+        var productions =video.getProductionsDirector(director);
+        var production = productions.next();
+
+        while (production.done !== true) {
+            var divCol = document.createElement("div");
+            divCol.setAttribute("class", "col-sm-3");
+
+            var divCar = document.createElement("div");
+            divCar.setAttribute("class", "thumbnail");
+
+            /*var foto = document.createElement("img");
+            foto.setAttribute("src", production.value.image);
+            divCar.appendChild(foto);*/
+
+            var divCap = document.createElement("div");
+            divCap.setAttribute("class", "caption");
+
+            var h4 = document.createElement("h4");
+            h4.appendChild(document.createTextNode(production.value.title));
+            divCap.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("+ informacion"));
+            a.setAttribute("class", "pull-right");
+            divCap.appendChild(a);
+
+            divCar.appendChild(divCap);
+            divCol.appendChild(divCar);
+            divInfo.appendChild(divCol);
+
+            production = productions.next();
+        }
+
+        divFoto.appendChild(divThumb);
+        divSct1.appendChild(divFoto);
+        divSct1.appendChild(divInfo);
+    }
+}
+function removeChildsElement(elem) {
+    var len = elem.children.length - 1;
+    for (var i = len; i > -1; i--) {
+        elem.removeChild(element.children[i]);
+    }
+}
+function init(vs) {
+    objetos(vs);
+    categoriesMenuPopulate(vs);
+    var initPop = initPopulate(vs);
+    initPop();
+}
+var vs = VideoSystem.getInstance();
+window.onload = init(vs);
