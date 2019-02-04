@@ -110,14 +110,14 @@ function initPopulate(vs) {
             var a = document.createElement("a");
             a.setAttribute("href", "#");
             a.appendChild(document.createTextNode(categoria.value.name));
-            a.addEventListener("click", categoryPopulate(ategoria.value));
+            a.addEventListener("click", categoryPopulate(categoria.value));
             h2.appendChild(a);
             divCap.appendChild(h2);
 
             divCol.appendChild(divCap);
-            divSct1.appendChild(divCol);
+            main.appendChild(divCol);
 
-            var productions = videosystem.getProductionsCategory(categoria.value);
+            var productions = vs.getProductionsCategory(categoria.value);
             var production = productions.next();
 
             while (!production.done) {
@@ -148,11 +148,12 @@ function initPopulate(vs) {
                 divCap.appendChild(col);
                 production = productions.next();
             }
-            category = categories.next();
+            categoria = categorias.next();
         }
     }
 }
 function showActors(vs){
+    return function(){
     var main = document.getElementById("div-main");
     removeChildsElement(main);
 
@@ -174,15 +175,16 @@ function showActors(vs){
         var a = document.createElement("a");
         a.appendChild(document.createTextNode("+ informacion"));
         a.setAttribute("class", "pull-right");
-        a.addEventListener("click", showActor(video, actor.value));
+        a.addEventListener("click", showActor(vs, actor.value));
         divCap.appendChild(a);
 
         divThumb.appendChild(divCap);
         divCol.appendChild(divThumb);
-        divSct1.appendChild(divCol);
+        main.appendChild(divCol);
 
         actor = actors.next();
     }
+}
 }
 function showDirectors(vs){
     return function () {
@@ -207,18 +209,18 @@ function showDirectors(vs){
             var a = document.createElement("a");
             a.appendChild(document.createTextNode("+ informacion"));
             a.setAttribute("class", "pull-right");
-            a.addEventListener("click", showDirector(video, director.value));
+            a.addEventListener("click", showDirector(vs, director.value));
             divCap.appendChild(a);
 
             divThumb.appendChild(divCap);
             divCol.appendChild(divThumb);
-            divSct1.appendChild(divCol);
+            main.appendChild(divCol);
 
             director = directores.next();
         }
     }
 }
-function showActor(video, actor) {
+function showActor(vs, actor) {
     return function () {
         var main = document.getElementById("div-main");
         removeChildsElement(main);
@@ -237,14 +239,14 @@ function showActor(video, actor) {
         divInfo.setAttribute("class", "col-sm-8");
 
         var name = document.createElement("h2");
-        name.appendChild(document.createTextNode(actor.name + " " + actor.lastname  + "("+ actor.born.toLocaleDateString() + ")"));
+        name.appendChild(document.createTextNode(actor.name + " " + actor.lastname1  + "("+ actor.born.toLocaleDateString() + ")"));
         divInfo.appendChild(name);
 
         var prod = document.createElement("h3");
         prod.appendChild(document.createTextNode("Producciones:"));
         divInfo.appendChild(prod);
 
-        var productions =video.getProductionsActor(actor);
+        var productions = vs.getProductionsActor(actor);
         var production = productions.next();
 
         while (production.done !== true) {
@@ -278,12 +280,12 @@ function showActor(video, actor) {
         }
 
         divFoto.appendChild(divThumb);
-        divSct1.appendChild(divFoto);
-        divSct1.appendChild(divInfo);
+        main.appendChild(divFoto);
+        main.appendChild(divInfo);
     }
 }
 
-function showDirector(video, director) {
+function showDirector(vs, director) {
     return function () {
         var main = document.getElementById("div-main");
         removeChildsElement(main);
@@ -302,14 +304,14 @@ function showDirector(video, director) {
         divInfo.setAttribute("class", "col-sm-8");
 
         var name = document.createElement("h2");
-        name.appendChild(document.createTextNode(director.name + " " + director.lastname  + "("+ director.born.toLocaleDateString() + ")"));
+        name.appendChild(document.createTextNode(director.name + " " + director.lastname1  + "("+ director.born.toLocaleDateString() + ")"));
         divInfo.appendChild(name);
 
         var prod = document.createElement("h3");
         prod.appendChild(document.createTextNode("Producciones:"));
         divInfo.appendChild(prod);
 
-        var productions =video.getProductionsDirector(director);
+        var productions =vs.getProductionsDirector(director);
         var production = productions.next();
 
         while (production.done !== true) {
@@ -343,14 +345,14 @@ function showDirector(video, director) {
         }
 
         divFoto.appendChild(divThumb);
-        divSct1.appendChild(divFoto);
-        divSct1.appendChild(divInfo);
+        main.appendChild(divFoto);
+        main.appendChild(divInfo);
     }
 }
 function removeChildsElement(elem) {
     var len = elem.children.length - 1;
     for (var i = len; i > -1; i--) {
-        elem.removeChild(element.children[i]);
+        elem.removeChild(elem.children[i]);
     }
 }
 function init(vs) {
