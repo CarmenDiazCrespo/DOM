@@ -40,6 +40,11 @@ header{
 main{
     margin-bottom: 150px;
     min-height:calc(100vh - 15rem - 400px);
+	margin-left: 10%;
+	margin-right: 10%;
+	
 }
-
+table{
+	width: 50%;
+}
 
