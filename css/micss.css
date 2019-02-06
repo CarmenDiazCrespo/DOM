@@ -44,7 +44,18 @@ main{
 	margin-right: 10%;
 	
 }
-table{
+.table{
+    margin: 0 auto;
 	width: 50%;
+}
+.table>thead>tr>th{
+    text-align: center;
+}
+.table>tbody>tr>td{
+    text-align: center;
+}
+.thumbnail>img{
+    width: 100%;
+    height: 250px;
 }
 

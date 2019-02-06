@@ -97,7 +97,7 @@ function categoriesMenuPopulate(vs){
     var categorias = vs.categorias;
     var categoria = categorias.next();
 
-    ini[0].addEventListener("click", initPopulate(vs));
+    //ini[0].addEventListener("click", initPopulate(vs));
     while (categoria.done !== true){
         var li = document.createElement("li");
         var a = document.createElement("a");
@@ -165,7 +165,9 @@ function showCategory(vs, categoria) {
     }
 }
 //showProductions no la he hecho porque lo tengo hecho en cada show diferente 
-function initPopulate(vs) {
+function initPopulate() {
+
+     
     //Creo los eventos que de si pulsan el menú 
     var actores = document.getElementById("actores");
     actores.addEventListener("click", showActors(vs));
@@ -174,6 +176,10 @@ function initPopulate(vs) {
 
     //Llamo al método para que se vean las categorías en el main
     showHomePage(vs);
+    /*objetos(vs);
+    categoriesMenuPopulate(vs);*/
+
+
 }
 function showHomePage(vs){
     //Borro lo que haya en el main
@@ -186,7 +192,7 @@ function showHomePage(vs){
     while (categoria.done !== true){
         //Creo los contenedores de las categorías que serán tantos como categorías haya
         var colCat = document.createElement("div");
-        colCat.setAttribute("class", "col-sm-12");
+        colCat.setAttribute("class", "col-sm-8");
         main.appendChild(colCat);
 
         var cap = document.createElement("div");
@@ -541,7 +547,7 @@ function showProduction(vs, production) {
             divCap.setAttribute("class", "caption");
 
             var h4 = document.createElement("h4");
-            h4.appendChild(document.createTextNode(iterador.name + " " + iterador.lastname1));
+            h4.appendChild(document.createTextNode(iterador[i].name + " " + iterador[i].lastname1));
             divCap.appendChild(h4);
 
             var a = document.createElement("a");
@@ -597,11 +603,12 @@ function removeChildren(elem) {
         elem.removeChild(elem.children[i]);
     }
 }
-function init(vs) {
+var vs = VideoSystem.getInstance();
+function init() {
     objetos(vs);
     categoriesMenuPopulate(vs);
     initPopulate(vs);
 
 }
-var vs = VideoSystem.getInstance();
-window.onload = init(vs);
+
+window.onload = init;
