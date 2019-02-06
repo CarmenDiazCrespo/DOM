@@ -735,24 +735,28 @@ var VideoSystem = (function () { //La función anónima devuelve un método getI
 				if (productionPosition === -1) throw new NotExistsException();
 				//creo un array aux con los actores que si tienen la producción que nos han pasado
 				var iterador= [];
-				var proPosition =0;
+					
+				var proPosition = 0;
 				for(var i=0; i<_actors.length; i++){
 					proPosition = getProPositionActor(production, _actors[i].aProductions);
 					if( proPosition!= -1){
 						iterador.push({
 							name:_actors[i].actor.name,
-							character: _actors[i].aProductions[proPosition].character
+							lastname1:_actors[i].actor.lastname1,
+							lastname2:_actors[i].actor.lastname2,
+							character:_actors[i].aProductions[proPosition].character
 						});
 					}
 				}
-				/*var nextIndex = 0;
-				//Ahora recorremos el array aux
-                return {
-                    next: function(){
-                        return nextIndex < iterador[actorPosition].aProductions.length ?
-							{value: iterador[actorPosition].aProductions[nextIndex++], done: false}:
-                            {done: true};
-                    }
+				/*for(var i=0; i<_directores.length; i++){
+					proPosition = getProPositionActor(production, _directores[i].dProductions);
+					if( proPosition!= -1){
+						iterador.directors.push({
+							name:_directores[i].name,
+							lastname1:_directores[i].lastname1,
+							lastname2:_directores[i].lastname2
+						});
+					}
 				}*/
 				return iterador;
 			}

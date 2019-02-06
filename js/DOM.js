@@ -119,9 +119,9 @@ function showCategory(vs, categoria) {
         removeChildren(main);
 
         //El nombre y esas cosis de las categorías
-        var h4 = document.createElement("h4");
-        h4.appendChild(document.createTextNode(categoria.name));
-        main.appendChild(h4);
+        var h2 = document.createElement("h2");
+        h2.appendChild(document.createTextNode(categoria.name));
+        main.appendChild(h2);
 
         var p = document.createElement("p");
         p.appendChild(document.createTextNode(categoria.description));
@@ -151,9 +151,14 @@ function showCategory(vs, categoria) {
             desc.setAttribute("class", "caption");
             galeria1.appendChild(desc);
 
+            //El nombre y el link para entrar a las producciones
             var h4 = document.createElement("h4");
-            h4.appendChild(document.createTextNode(production.value.title));
             desc.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode(production.value.title));
+            a.addEventListener("click", showProduction(vs, production.value));
+            h4.appendChild(a);
 
             production = productions.next();
         }
@@ -161,15 +166,14 @@ function showCategory(vs, categoria) {
 }
 //showProductions no la he hecho porque lo tengo hecho en cada show diferente 
 function initPopulate(vs) {
-    return function () {
-        //Creo los eventos que de si pulsan el menú 
-        var actores = document.getElementById("actores");
-        actores.addEventListener("click", showActors(vs));
-        var directores = document.getElementById("directores");
-        directores.addEventListener("click", showDirectors(vs));
-        //Llamo al método para que se vean las categorías en el main
-        showHomePage(vs);
-    }
+    //Creo los eventos que de si pulsan el menú 
+    var actores = document.getElementById("actores");
+    actores.addEventListener("click", showActors(vs));
+    var directores = document.getElementById("directores");
+    directores.addEventListener("click", showDirectors(vs));
+
+    //Llamo al método para que se vean las categorías en el main
+    showHomePage(vs);
 }
 function showHomePage(vs){
     //Borro lo que haya en el main
@@ -492,6 +496,101 @@ function showDirector(vs, director) {
         
     }
 }
+function showProduction(vs, production) {
+    return function () {
+        //Borro el main
+        var main = document.getElementById("div-main");
+        removeChildren(main);
+
+        var divFoto = document.createElement("div");
+        divFoto.setAttribute("class", "col-sm-4");
+
+        var divThumb = document.createElement("div");
+        divThumb.setAttribute("class", "thumbnail");
+
+        var img = document.createElement("img");
+        img.setAttribute("src", production.image);
+        divThumb.appendChild(img);
+
+        var divInfo = document.createElement("div");
+        divInfo.setAttribute("class", "col-sm-8");
+
+        var title = document.createElement("h2");
+        title.appendChild(document.createTextNode(production.title + "(" + production.publication.toLocaleDateString() + ")"));
+        divInfo.appendChild(title);
+
+        var actores = document.createElement("h3");
+        actores.appendChild(document.createTextNode("Actores:"));
+        divInfo.appendChild(actores);
+
+        var iterador = vs.getCast(production);
+        var acts = iterador.length;
+
+        for (var i = 0; i < acts; i++) {
+            var divCol = document.createElement("div");
+            divCol.setAttribute("class", "col-sm-3");
+
+            var divCar = document.createElement("div");
+            divCar.setAttribute("class", "thumbnail");
+
+            /*var foto = document.createElement("img");
+            foto.setAttribute("src", iterador.picture);
+            divCar.appendChild(foto);*/
+
+            var divCap = document.createElement("div");
+            divCap.setAttribute("class", "caption");
+
+            var h4 = document.createElement("h4");
+            h4.appendChild(document.createTextNode(iterador.name + " " + iterador.lastname1));
+            divCap.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("+ informacion"));
+            a.setAttribute("class", "pull-right");
+            a.addEventListener("click", showActor(vs, iterador.value));
+            divCap.appendChild(a);
+
+            divCar.appendChild(divCap);
+            divCol.appendChild(divCar);
+            divInfo.appendChild(divCol);
+        }
+
+        /*var director = document.createElement("h3");
+            director.appendChild(document.createTextNode("Director:"));
+            divInfo.appendChild(director);
+
+            var divCol2 = document.createElement("div");
+            divCol2.setAttribute("class", "col-sm-3");
+
+            var divCar2 = document.createElement("div");
+            divCar2.setAttribute("class", "thumbnail");
+
+            var foto2 = document.createElement("img");
+            foto2.setAttribute("src", cast.director.director.picture);
+            divCar2.appendChild(foto2);
+
+            var divCap2 = document.createElement("div");
+            divCap2.setAttribute("class", "caption");
+
+            var h42 = document.createElement("h4");
+            h42.appendChild(document.createTextNode(cast.director.director.name + " " + cast.director.director.lastname));
+            divCap2.appendChild(h42);
+
+            var a2 = document.createElement("a");
+            a2.appendChild(document.createTextNode("+ informacion"));
+            a2.setAttribute("class", "pull-right");
+            a2.addEventListener("click", showDirector(video, cast.director.director));
+            divCap2.appendChild(a2);
+
+            divCar2.appendChild(divCap2);
+            divCol2.appendChild(divCar2);
+            divInfo.appendChild(divCol2);*/
+
+        divFoto.appendChild(divThumb);
+        main.appendChild(divFoto);
+        main.appendChild(divInfo);
+    }
+}
 function removeChildren(elem) {
     var len = elem.children.length - 1;
     for (var i = len; i > -1; i--) {
@@ -501,8 +600,8 @@ function removeChildren(elem) {
 function init(vs) {
     objetos(vs);
     categoriesMenuPopulate(vs);
-    var initPop = initPopulate(vs);
-    initPop();
+    initPopulate(vs);
+
 }
 var vs = VideoSystem.getInstance();
 window.onload = init(vs);
