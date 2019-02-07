@@ -1,5 +1,7 @@
 "use strict";
 
+var vs = VideoSystem.getInstance();
+
 function objetos(vs){
     //Creo los objetos que voy a utilizar.
     //Objetos usuarios
@@ -97,16 +99,17 @@ function categoriesMenuPopulate(vs){
     var categorias = vs.categorias;
     var categoria = categorias.next();
 
-    //ini[0].addEventListener("click", initPopulate(vs));
     while (categoria.done !== true){
+        //Voy creando el submenu
+        //Tipo lista para cada categoría
         var li = document.createElement("li");
         var a = document.createElement("a");
         a.setAttribute("href", "#");
         li.appendChild(a);
         ul[0].appendChild(li);
 
-        a.addEventListener("click", showCategory(vs, categoria.value));
         a.appendChild(document.createTextNode(categoria.value.name));
+        a.addEventListener("click", showCategory(vs, categoria.value));
 
         categoria = categorias.next();
     }
@@ -165,22 +168,8 @@ function showCategory(vs, categoria) {
     }
 }
 //showProductions no la he hecho porque lo tengo hecho en cada show diferente 
-function initPopulate() {
+//Es por culpa de actores, mejor te lo explico en persona y veo si tengo que cambiarlo
 
-     
-    //Creo los eventos que de si pulsan el menú 
-    var actores = document.getElementById("actores");
-    actores.addEventListener("click", showActors(vs));
-    var directores = document.getElementById("directores");
-    directores.addEventListener("click", showDirectors(vs));
-
-    //Llamo al método para que se vean las categorías en el main
-    showHomePage(vs);
-    /*objetos(vs);
-    categoriesMenuPopulate(vs);*/
-
-
-}
 function showHomePage(vs){
     //Borro lo que haya en el main
     var main = document.getElementById("div-main");
@@ -220,7 +209,7 @@ function showHomePage(vs){
         while (production.done !== true) {
             //Creo un div para meterlo en columnas más pequeñas y se quede a un lado
             var fotoPro = document.createElement("div");
-            fotoPro.setAttribute("class", "col-sm-4");
+            fotoPro.setAttribute("class", "col-sm-6");
             cap.appendChild(fotoPro);
 
             //Creo el div donde va la miniatura de la foto
@@ -238,9 +227,14 @@ function showHomePage(vs){
             desc.setAttribute("class", "caption");
             galeria1.appendChild(desc);
 
+            //El nombre y el link para entrar a las producciones
             var h4 = document.createElement("h4");
-            h4.appendChild(document.createTextNode(production.value.title));
             desc.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode(production.value.title));
+            a.addEventListener("click", showProduction(vs, production.value));
+            h4.appendChild(a);
 
             production = productions.next();
         }//Fin del while de producciones
@@ -267,10 +261,10 @@ function showActors(vs){
         thead.appendChild(tr);
         var th1 = document.createElement("th");
         tr.appendChild(th1);
-        th1.appendChild(document.createTextNode("Name"));
+        th1.appendChild(document.createTextNode("Nombre"));
         var th2 = document.createElement("th");
         tr.appendChild(th2);
-        th2.appendChild(document.createTextNode("Lastname"));
+        th2.appendChild(document.createTextNode("Apellido"));
         var tbody = document.createElement("tbody");
         table.appendChild(tbody);
         //Recorro los actores
@@ -364,9 +358,14 @@ function showActor(vs, actor) {
             desc.setAttribute("class", "caption");
             galeria1.appendChild(desc);
 
+            //El nombre y el link para entrar a las producciones
             var h4 = document.createElement("h4");
-            h4.appendChild(document.createTextNode(production.value.Production.title));
             desc.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode(production.value.Production.title));
+            a.addEventListener("click", showProduction(vs, production.value.Production));
+            h4.appendChild(a);
 
             production = productions.next();
         }
@@ -394,10 +393,10 @@ function showDirectors(vs){
         thead.appendChild(tr);
         var th1 = document.createElement("th");
         tr.appendChild(th1);
-        th1.appendChild(document.createTextNode("Name"));
+        th1.appendChild(document.createTextNode("Nombre"));
         var th2 = document.createElement("th");
         tr.appendChild(th2);
-        th2.appendChild(document.createTextNode("Lastname"));
+        th2.appendChild(document.createTextNode("Apellido"));
         var tbody = document.createElement("tbody");
         table.appendChild(tbody);
         
@@ -493,9 +492,14 @@ function showDirector(vs, director) {
             desc.setAttribute("class", "caption");
             galeria1.appendChild(desc);
 
+            //El nombre y el link para entrar a las producciones
             var h4 = document.createElement("h4");
-            h4.appendChild(document.createTextNode(production.value.title));
             desc.appendChild(h4);
+
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode(production.value.title));
+            a.addEventListener("click", showProduction(vs, production.value));
+            h4.appendChild(a);
 
             production = productions.next();
         }
@@ -507,108 +511,128 @@ function showProduction(vs, production) {
         //Borro el main
         var main = document.getElementById("div-main");
         removeChildren(main);
+        //Empiezo con los actores
+        //Foto de la producción 
+        var foto = document.createElement("div");
+        foto.setAttribute("class", "col-sm-4");
+        main.appendChild(foto);
 
-        var divFoto = document.createElement("div");
-        divFoto.setAttribute("class", "col-sm-4");
-
-        var divThumb = document.createElement("div");
-        divThumb.setAttribute("class", "thumbnail");
+        var galeria = document.createElement("div");
+        galeria.setAttribute("class", "thumbnail");
+        foto.appendChild(galeria);
 
         var img = document.createElement("img");
         img.setAttribute("src", production.image);
-        divThumb.appendChild(img);
+        galeria.appendChild(img);
 
-        var divInfo = document.createElement("div");
-        divInfo.setAttribute("class", "col-sm-8");
+        //Empiezo a meter la info
+        var info = document.createElement("div");
+        info.setAttribute("class", "col-sm-8");
+        main.appendChild(info);
 
         var title = document.createElement("h2");
-        title.appendChild(document.createTextNode(production.title + "(" + production.publication.toLocaleDateString() + ")"));
-        divInfo.appendChild(title);
-
-        var actores = document.createElement("h3");
-        actores.appendChild(document.createTextNode("Actores:"));
-        divInfo.appendChild(actores);
+        title.appendChild(document.createTextNode(production.title));
+        info.appendChild(title);
 
         var iterador = vs.getCast(production);
-        var acts = iterador.length;
+        var len1 = iterador.actores.length;
+        var div_actores = document.createElement("div");
+        //Por si no tiene director que no salga
+        if(len1 > 0 ){
+            var actores = document.createElement("h3");
+            actores.appendChild(document.createTextNode("Actores:"));
+            div_actores.appendChild(actores);
+        }
+        info.appendChild(div_actores);
+        for (var i = 0; i < len1; i++) {
+           //Lo mismo que arriba, pero de directores
+            var col1 = document.createElement("div");
+            col1.setAttribute("class", "col-sm-3");
+            div_actores.appendChild(col1);
 
-        for (var i = 0; i < acts; i++) {
-            var divCol = document.createElement("div");
-            divCol.setAttribute("class", "col-sm-3");
+            var galeria = document.createElement("div");
+            galeria.setAttribute("class", "thumbnail");
 
-            var divCar = document.createElement("div");
-            divCar.setAttribute("class", "thumbnail");
+            var foto = document.createElement("img");
+            foto.setAttribute("src", iterador.actores[i].actor.picture);
+            galeria.appendChild(foto);
 
-            /*var foto = document.createElement("img");
-            foto.setAttribute("src", iterador.picture);
-            divCar.appendChild(foto);*/
-
-            var divCap = document.createElement("div");
-            divCap.setAttribute("class", "caption");
-
+            var cap = document.createElement("div");
+            cap.setAttribute("class", "caption");
+            //Nombre de los actores
             var h4 = document.createElement("h4");
-            h4.appendChild(document.createTextNode(iterador[i].name + " " + iterador[i].lastname1));
-            divCap.appendChild(h4);
+            cap.appendChild(h4);
 
             var a = document.createElement("a");
-            a.appendChild(document.createTextNode("+ informacion"));
-            a.setAttribute("class", "pull-right");
-            a.addEventListener("click", showActor(vs, iterador.value));
-            divCap.appendChild(a);
+            a.appendChild(document.createTextNode(iterador.actores[i].actor.name + " " + iterador.actores[i].actor.lastname1));
+            a.addEventListener("click", showActor(vs, iterador.actores[i].actor)); //Si pulsa en el nombre sale la info
+            h4.appendChild(a);
 
-            divCar.appendChild(divCap);
-            divCol.appendChild(divCar);
-            divInfo.appendChild(divCol);
+            galeria.appendChild(cap);
+            col1.appendChild(galeria);
+            
+        }//Fin actores
+        //Array de directores dentro del iterador
+        var div_directores = document.createElement("div");
+        info.appendChild(div_directores);
+        //Por si no hay directores, que no salga lo de directores: 
+        var len2 = iterador.directores.length;
+        if(len2 > 0){
+            var director = document.createElement("h3");
+            director.appendChild(document.createTextNode("Directores:"));
+            div_directores.appendChild(director);    
         }
-
-        /*var director = document.createElement("h3");
-            director.appendChild(document.createTextNode("Director:"));
-            divInfo.appendChild(director);
-
-            var divCol2 = document.createElement("div");
-            divCol2.setAttribute("class", "col-sm-3");
-
-            var divCar2 = document.createElement("div");
-            divCar2.setAttribute("class", "thumbnail");
+        for (var i = 0; i < len2; i++) {
+            
+            var col2 = document.createElement("div");
+            col2.setAttribute("class", "col-sm-3");
+            div_directores.appendChild(col2);
+            //Aquí voy metiendo la foto
+            var galeria2 = document.createElement("div");
+            galeria2.setAttribute("class", "thumbnail");
+            col2.appendChild(galeria2);
 
             var foto2 = document.createElement("img");
-            foto2.setAttribute("src", cast.director.director.picture);
-            divCar2.appendChild(foto2);
+            foto2.setAttribute("src", iterador.directores[i].director.picture);
+            galeria2.appendChild(foto2);
 
-            var divCap2 = document.createElement("div");
-            divCap2.setAttribute("class", "caption");
-
+            var cap2 = document.createElement("div");
+            cap2.setAttribute("class", "caption");
+            galeria2.appendChild(cap2);
+            //Muestro el nombre
             var h42 = document.createElement("h4");
-            h42.appendChild(document.createTextNode(cast.director.director.name + " " + cast.director.director.lastname));
-            divCap2.appendChild(h42);
+            cap2.appendChild(h42);
 
             var a2 = document.createElement("a");
-            a2.appendChild(document.createTextNode("+ informacion"));
-            a2.setAttribute("class", "pull-right");
-            a2.addEventListener("click", showDirector(video, cast.director.director));
-            divCap2.appendChild(a2);
-
-            divCar2.appendChild(divCap2);
-            divCol2.appendChild(divCar2);
-            divInfo.appendChild(divCol2);*/
-
-        divFoto.appendChild(divThumb);
-        main.appendChild(divFoto);
-        main.appendChild(divInfo);
+            a2.appendChild(document.createTextNode(iterador.directores[i].director.name + " " + iterador.directores[i].director.lastname1));
+            a2.addEventListener("click", showDirector(vs, iterador.directores[i].director));
+            cap2.appendChild(a2);
+            
+        }
     }
 }
 function removeChildren(elem) {
+    //recorro los hijos y los borros, es así para no borrar también al padre
     var len = elem.children.length - 1;
     for (var i = len; i > -1; i--) {
         elem.removeChild(elem.children[i]);
     }
 }
-var vs = VideoSystem.getInstance();
-function init() {
+
+function initPopulate() {
+    //Creo los eventos que de si pulsan el menú 
+    var actores = document.getElementById("actores");
+    actores.addEventListener("click", showActors(vs));
+    var directores = document.getElementById("directores");
+    directores.addEventListener("click", showDirectors(vs));
+
+    //Método para crear los objetos
     objetos(vs);
+    //Llamo al método para poder desplegar el menu categoría
     categoriesMenuPopulate(vs);
-    initPopulate(vs);
+    //Llamo al método para que se vean las categorías en el main
+    showHomePage(vs);
 
 }
 
-window.onload = init;
+window.onload = initPopulate;

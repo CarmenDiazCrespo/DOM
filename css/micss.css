@@ -54,8 +54,11 @@ main{
 .table>tbody>tr>td{
     text-align: center;
 }
-.thumbnail>img{
+/*.thumbnail>img{
     width: 100%;
     height: 250px;
+}*/
+.thumbnail {
+    padding: 0;
 }
 
