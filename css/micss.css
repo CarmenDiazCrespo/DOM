@@ -38,11 +38,17 @@ header{
     width: auto;
 }
 main{
-    margin-bottom: 150px;
+    margin-bottom: 5%;
     min-height:calc(100vh - 15rem - 400px);
 	margin-left: 10%;
 	margin-right: 10%;
 	
+}
+.redes-sociales{
+	margin-left: 50%;
+}
+.container {
+    width: 970px;
 }
 .table{
     margin: 0 auto;
@@ -54,6 +60,14 @@ main{
 .table>tbody>tr>td{
     text-align: center;
 }
+.table>tbody>tr>td>img{
+	max-width: 250px;
+	height: 150px;
+}
+.notas{
+	margin-top: 5%;
+	text-align: right;
+}
 /*.thumbnail>img{
     width: 100%;
     height: 250px;
@@ -61,4 +75,20 @@ main{
 .thumbnail {
     padding: 0;
 }
-
+a{
+	color: #660099;
+}
+body{
+	background-color: #f7e6ff;
+}
+header{
+	color: #e6b3ff;
+	background-color: #33004d;
+}
+header a{
+	color: #e6b3ff;
+}
+.carousel-caption{
+	background-color:rgb(238, 204, 255, 0.5);
+	border-radius: 5%;
+}

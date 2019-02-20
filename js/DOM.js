@@ -2,7 +2,7 @@
 
 var vs = VideoSystem.getInstance();
 
-function objetos(vs){
+function objetos(){
     //Creo los objetos que voy a utilizar.
     //Objetos usuarios
     var u1 = new User("kheiss","montoya@hotmail.com","Montoya123!");
@@ -58,6 +58,7 @@ function objetos(vs){
     vs.addActor(ac3);
     vs.addActor(ac4);
     //objetos category
+    var cat5= new Category("Lo más visto","Las peliculas y series más vistas...");
     var cat1= new Category("Comedia","Te partirás de risa.");
     var cat2= new Category("Drama", "Contexto serio, con un tono y una orientación más susceptible de inspirar tristeza y compasión. ");
     var cat3= new Category("Anime", "Monitos japoneses.");
@@ -66,6 +67,7 @@ function objetos(vs){
     vs.addCategory(cat2);
     vs.addCategory(cat3);
     vs.addCategory(cat4);
+    //vs.addCategory(cat5);
     
     //Objetos de Coordenadas
     var c1 = new Coordinate(-1, 1);
@@ -92,7 +94,7 @@ function objetos(vs){
     vs.assignDirector(dir4,pro1);
 }
 
-function categoriesMenuPopulate(vs){
+function categoriesMenuPopulate(){
     //Recorremos las categorias.
     var ini = document.getElementsByClassName("navbar-header");
     var ul = document.getElementsByClassName("submenu");
@@ -109,13 +111,13 @@ function categoriesMenuPopulate(vs){
         ul[0].appendChild(li);
 
         a.appendChild(document.createTextNode(categoria.value.name));
-        a.addEventListener("click", showCategory(vs, categoria.value));
+        a.addEventListener("click", showCategory(categoria.value));
 
         categoria = categorias.next();
     }
 
 }
-function showCategory(vs, categoria) {
+function showCategory(categoria) {
     return function () {
         //borro lo que haya en el main
         var main = document.getElementById("div-main");
@@ -160,7 +162,7 @@ function showCategory(vs, categoria) {
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(production.value.title));
-            a.addEventListener("click", showProduction(vs, production.value));
+            a.addEventListener("click", showProduction(production.value));
             h4.appendChild(a);
 
             production = productions.next();
@@ -170,10 +172,13 @@ function showCategory(vs, categoria) {
 //showProductions no la he hecho porque lo tengo hecho en cada show diferente 
 //Es por culpa de actores, mejor te lo explico en persona y veo si tengo que cambiarlo
 
-function showHomePage(vs){
+function showHomePage(){
     //Borro lo que haya en el main
     var main = document.getElementById("div-main");
     removeChildren(main);
+    var divCon = document.createElement("div");
+    divCon.setAttribute("class","container");
+    main.appendChild(divCon);
 
     //Recorro las categorías para visualizarlas
     var categorias = vs.categorias;
@@ -182,7 +187,7 @@ function showHomePage(vs){
         //Creo los contenedores de las categorías que serán tantos como categorías haya
         var colCat = document.createElement("div");
         colCat.setAttribute("class", "col-sm-8");
-        main.appendChild(colCat);
+        divCon.appendChild(colCat);
 
         var cap = document.createElement("div");
         cap.setAttribute("class", "caption");
@@ -195,53 +200,108 @@ function showHomePage(vs){
         var a = document.createElement("a");
         a.setAttribute("href", "#");
         a.appendChild(document.createTextNode(categoria.value.name));
-        a.addEventListener("click", showCategory(vs, categoria.value));
+        a.addEventListener("click", showCategory(categoria.value));
         h3.appendChild(a);
 
         var p = document.createElement("p");
         p.appendChild(document.createTextNode(categoria.value.description));
         cap.appendChild(p);
+        
+        //Creo un div para meterlo en columnas más pequeñas y se quede a un lado
+        var fotoDiv = document.createElement("div");
+        fotoDiv.setAttribute("class", "col-sm-6");
+        cap.appendChild(fotoDiv);
+
+        //Creo el carrusel
+        var divCar = document.createElement("div");
+        divCar.setAttribute("id", "myCarousel");
+        divCar.setAttribute("class", "carousel slide");
+        divCar.setAttribute("data-ride", "carousel");
+        fotoDiv.appendChild(divCar);
+
+        //Los circulitos que indica en cual está
+        var ol = document.createElement("ol");
+        ol.setAttribute("class", "carousel-indicators");
+        divCar.appendChild(ol);
+         
+        //El div para las fotos
+        var divInner = document.createElement("div");
+        divInner.setAttribute("class", "carousel-inner");
+        divCar.appendChild(divInner);
 
         //Muestro las producciones de cada categoría 
         var productions = vs.getProductionsCategory(categoria.value);
         var production = productions.next();
+        var i = 0;
 
         while (production.done !== true) {
-            //Creo un div para meterlo en columnas más pequeñas y se quede a un lado
-            var fotoPro = document.createElement("div");
-            fotoPro.setAttribute("class", "col-sm-6");
-            cap.appendChild(fotoPro);
 
-            //Creo el div donde va la miniatura de la foto
-            var galeria1 = document.createElement("div");
-            galeria1.setAttribute("class", "thumbnail");
-            fotoPro.appendChild(galeria1);
+            var li =document.createElement("li");
+            li.setAttribute("data-target", "#myCarousel");
+            li.setAttribute("data-slide-to", "'"+i+"'");
+            if(i == 0){
+                li.setAttribute("class", "active");
+            }
+            ol.appendChild(li);
+
+            //div para las imagenes e info
+            var divItem = document.createElement("div");
+            if(i == 0 ){
+                divItem.setAttribute("class", "item active");
+            }else{
+                divItem.setAttribute("class", "item");
+            }
+            divInner.appendChild(divItem);
 
             //Cojo la foto de la Producción
             var imgPro = document.createElement("img");
             imgPro.setAttribute("src", production.value.image);
-            galeria1.appendChild(imgPro);
+            divItem.appendChild(imgPro);
 
-            //Meto la descripción de la foto
-            var desc = document.createElement("div");
-            desc.setAttribute("class", "caption");
-            galeria1.appendChild(desc);
+            //Div para la info
+            var divInfo = document.createElement("div");
+            divInfo.setAttribute("class", "carousel-caption");
+            divItem.appendChild(divInfo);
 
             //El nombre y el link para entrar a las producciones
             var h4 = document.createElement("h4");
-            desc.appendChild(h4);
+            divInfo.appendChild(h4);
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(production.value.title));
-            a.addEventListener("click", showProduction(vs, production.value));
+            a.addEventListener("click", showProduction(production.value));
             h4.appendChild(a);
 
             production = productions.next();
+            i++;
+
         }//Fin del while de producciones
+
+        //Botones para mover el carrusel
+        var lft = document.createElement("a");
+        lft.setAttribute("class", "left carousel-control");
+        lft.setAttribute("href", "#myCarousel");
+        lft.setAttribute("data-slide", "prev");
+        divCar.appendChild(lft);
+
+        var spanl1 = document.createElement("span");
+        spanl1.setAttribute("class", "glyphicon glyphicon-chevron-left");
+        lft.appendChild(spanl1);
+
+        var rgt = document.createElement("a");
+        rgt.setAttribute("class", "right carousel-control");
+        rgt.setAttribute("href", "#myCarousel");
+        rgt.setAttribute("data-slide", "next");
+        divCar.appendChild(rgt);
+
+        var spanR1 = document.createElement("span");
+        spanR1.setAttribute("class", "glyphicon glyphicon-chevron-right");
+        rgt.appendChild(spanR1);
+        
         categoria = categorias.next();
     }//Fin del while de categorías
 }
-function showActors(vs){
+function showActors(){
     return function(){
         //borro lo que haya en el main
         var main = document.getElementById("div-main");
@@ -261,10 +321,13 @@ function showActors(vs){
         thead.appendChild(tr);
         var th1 = document.createElement("th");
         tr.appendChild(th1);
-        th1.appendChild(document.createTextNode("Nombre"));
+        th1.appendChild(document.createTextNode("Foto"));
         var th2 = document.createElement("th");
         tr.appendChild(th2);
-        th2.appendChild(document.createTextNode("Apellido"));
+        th2.appendChild(document.createTextNode("Nombre"));
+        var th3 = document.createElement("th");
+        tr.appendChild(th3);
+        th3.appendChild(document.createTextNode("Apellido"));
         var tbody = document.createElement("tbody");
         table.appendChild(tbody);
         //Recorro los actores
@@ -278,23 +341,30 @@ function showActors(vs){
             tr.appendChild(td1);
             var td2 = document.createElement("td");
             tr.appendChild(td2);
+            var td3 = document.createElement("td");
+            tr.appendChild(td3);
             //Añado los valores a las tablas
+            var ft = document.createElement("img");
+            ft.setAttribute("src", actor.value.picture);
+            ft.addEventListener("click", showActor(actor.value));
+            td1.appendChild(ft);
+
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(actor.value.name));
-            a.addEventListener("click", showActor(vs, actor.value));
-            td1.appendChild(a);
+            a.addEventListener("click", showActor(actor.value));
+            td2.appendChild(a);
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(actor.value.lastname1));
-            a.addEventListener("click", showActor(vs, actor.value));
-            td2.appendChild(a);
+            a.addEventListener("click", showActor(actor.value));
+            td3.appendChild(a);
 
             actor = actors.next();
         }
     }
 }
 
-function showActor(vs, actor) {
+function showActor(actor) {
     return function () {
         //Limpiar main
         var main = document.getElementById("div-main");
@@ -364,7 +434,7 @@ function showActor(vs, actor) {
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(production.value.Production.title));
-            a.addEventListener("click", showProduction(vs, production.value.Production));
+            a.addEventListener("click", showProduction(production.value.Production));
             h4.appendChild(a);
 
             production = productions.next();
@@ -372,7 +442,7 @@ function showActor(vs, actor) {
         
     }
 }
-function showDirectors(vs){
+function showDirectors(){
     return function () {
         //Borro lo que haya en el main
         var main = document.getElementById("div-main");
@@ -393,10 +463,13 @@ function showDirectors(vs){
         thead.appendChild(tr);
         var th1 = document.createElement("th");
         tr.appendChild(th1);
-        th1.appendChild(document.createTextNode("Nombre"));
+        th1.appendChild(document.createTextNode("Foto"));
         var th2 = document.createElement("th");
         tr.appendChild(th2);
-        th2.appendChild(document.createTextNode("Apellido"));
+        th2.appendChild(document.createTextNode("Nombre"));
+        var th3 = document.createElement("th");
+        tr.appendChild(th3);
+        th3.appendChild(document.createTextNode("Apellido"));
         var tbody = document.createElement("tbody");
         table.appendChild(tbody);
         
@@ -413,25 +486,36 @@ function showDirectors(vs){
             tr.appendChild(td1);
             var td2 = document.createElement("td");
             tr.appendChild(td2);
-
+            var td3 = document.createElement("td");
+            tr.appendChild(td3);
             //Añado los valores a las tablas
+            var ft = document.createElement("img");
+            ft.setAttribute("src", director.value.picture);
+            ft.addEventListener("click", showDirector(director.value));
+            td1.appendChild(ft);
+
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(director.value.name));
-            a.addEventListener("click", showDirector(vs, director.value));
-            td1.appendChild(a);
+            a.addEventListener("click", showDirector(director.value));
+            td2.appendChild(a);
             
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(director.value.lastname1));
-            a.addEventListener("click", showDirector(vs, director.value));
-            td2.appendChild(a);
+            a.addEventListener("click", showDirector(director.value));
+            td3.appendChild(a);
 
             director = directores.next();
         }
+        //Explico como funciona la tabla, por si el usu no tiene ni idea ?.?
+        var p = document.createElement("p");
+        p.setAttribute("class", "notas");
+        p.appendChild(document.createTextNode("Para saber más pulse sobre la foto, nombre o apellido."));
+        div.appendChild(p);
     }
 }
 
 
-function showDirector(vs, director) {
+function showDirector(director) {
     return function () {
         //Borro lo que hay en el main
         var main = document.getElementById("div-main");
@@ -498,7 +582,7 @@ function showDirector(vs, director) {
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(production.value.title));
-            a.addEventListener("click", showProduction(vs, production.value));
+            a.addEventListener("click", showProduction(production.value));
             h4.appendChild(a);
 
             production = productions.next();
@@ -506,7 +590,7 @@ function showDirector(vs, director) {
         
     }
 }
-function showProduction(vs, production) {
+function showProduction(production) {
     return function () {
         //Borro el main
         var main = document.getElementById("div-main");
@@ -565,7 +649,7 @@ function showProduction(vs, production) {
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(iterador.actores[i].actor.name + " " + iterador.actores[i].actor.lastname1));
-            a.addEventListener("click", showActor(vs, iterador.actores[i].actor)); //Si pulsa en el nombre sale la info
+            a.addEventListener("click", showActor(iterador.actores[i].actor)); //Si pulsa en el nombre sale la info
             h4.appendChild(a);
 
             galeria.appendChild(cap);
@@ -605,12 +689,88 @@ function showProduction(vs, production) {
 
             var a2 = document.createElement("a");
             a2.appendChild(document.createTextNode(iterador.directores[i].director.name + " " + iterador.directores[i].director.lastname1));
-            a2.addEventListener("click", showDirector(vs, iterador.directores[i].director));
+            a2.addEventListener("click", showDirector(iterador.directores[i].director));
             cap2.appendChild(a2);
             
         }
     }
 }
+function showResource(production) {
+    return function () {
+        var main = document.getElementById("div-main");
+
+        var divFoto = document.createElement("div");
+        divFoto.setAttribute("class", "col-sm-4");
+        main.appendChild(divFoto);
+
+        var divThumb = document.createElement("div");
+        divThumb.setAttribute("class", "thumbnail");
+        divFoto.appendChild(divThumb);
+
+        var img = document.createElement("img");
+        img.setAttribute("src", production.image);
+        divThumb.appendChild(img);
+
+        var divInfo = document.createElement("div");
+        divInfo.setAttribute("class", "col-sm-8");
+        divInfo.setAttribute("id", "info");
+
+        var title = document.createElement("h2");
+        title.appendChild(document.createTextNode(production.title + "(" + production.publication.toLocaleDateString() + ")"));
+        divInfo.appendChild(title);
+
+        var table = document.createElement("table");
+
+        var tr1 = document.createElement("tr");
+        table.appendChild(tr1);
+        var dur = document.createElement("td");
+        dur.appendChild(document.createTextNode("Duración"));
+        tr1.appendChild(dur);
+        var td1 = document.createElement("td");
+        td1.appendChild(document.createTextNode(production.resource.duration + " minutos."));
+        tr1.appendChild(td1);
+
+        var tr2 = document.createElement("tr");
+        table.appendChild(tr2);
+        var link = document.createElement("td");
+        link.appendChild(document.createTextNode("Link"));
+        tr2.appendChild(link);
+        var td2 = document.createElement("td");
+        td2.appendChild(document.createTextNode(production.resource.link));
+        tr2.appendChild(td2);
+
+        var tr3 = document.createElement("tr");
+        table.appendChild(tr3);
+        var aud = document.createElement("td");
+        aud.appendChild(document.createTextNode("Audios"));
+        tr3.appendChild(aud);
+        var td3 = document.createElement("td");
+
+        var audios = "";
+        for (var i = 0; i < production.resource.audios.length; i++) {
+            audios += production.resource.audios[i];
+        }
+        td3.appendChild(document.createTextNode(audios));
+        tr3.appendChild(td3);
+
+        var tr4 = document.createElement("tr");
+        table.appendChild(tr4);
+        var subs = document.createElement("td");
+        subs.appendChild(document.createTextNode("Subtitulos"));
+        tr4.appendChild(subs);
+        var td4 = document.createElement("td");
+
+        var subtitulos = "";
+        for (var i = 0; i < production.resource.subtitles.length; i++) {
+            subtitulos += production.resource.subtitles[i];
+        }
+        td4.appendChild(document.createTextNode(subtitulos));
+        tr4.appendChild(td4);
+
+    }
+
+}
+
 function removeChildren(elem) {
     //recorro los hijos y los borros, es así para no borrar también al padre
     var len = elem.children.length - 1;
@@ -622,16 +782,16 @@ function removeChildren(elem) {
 function initPopulate() {
     //Creo los eventos que de si pulsan el menú 
     var actores = document.getElementById("actores");
-    actores.addEventListener("click", showActors(vs));
+    actores.addEventListener("click", showActors());
     var directores = document.getElementById("directores");
-    directores.addEventListener("click", showDirectors(vs));
+    directores.addEventListener("click", showDirectors());
 
     //Método para crear los objetos
-    objetos(vs);
+    objetos();
     //Llamo al método para poder desplegar el menu categoría
-    categoriesMenuPopulate(vs);
+    categoriesMenuPopulate();
     //Llamo al método para que se vean las categorías en el main
-    showHomePage(vs);
+    showHomePage();
 
 }
 
