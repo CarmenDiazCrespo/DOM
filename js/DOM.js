@@ -2,7 +2,7 @@
 
 var vs = VideoSystem.getInstance();
 
-function objetos(){
+function crearObjetos(){
     //Creo los objetos que voy a utilizar.
     //Objetos usuarios
     var u1 = new User("kheiss","montoya@hotmail.com","Montoya123!");
@@ -147,9 +147,13 @@ function showCategory(categoria) {
             fotoPro.appendChild(galeria1);
 
             //Cojo la foto de la Producción
+            var a1 = document.createElement("a");
+            galeria1.appendChild(a1);
+
             var imgPro = document.createElement("img");
             imgPro.setAttribute("src", production.value.image);
-            galeria1.appendChild(imgPro);
+            imgPro.addEventListener("click", showProduction(production.value));
+            a1.appendChild(imgPro);
 
             //Meto la descripción de la foto
             var desc = document.createElement("div");
@@ -176,6 +180,12 @@ function showHomePage(){
     //Borro lo que haya en el main
     var main = document.getElementById("div-main");
     removeChildren(main);
+
+    var tituloPag = document.createElement("h2");
+    tituloPag.appendChild(document.createTextNode("Página de Inicio"));
+    tituloPag.setAttribute("id","Ini");
+    main.appendChild(tituloPag);
+
     var divCon = document.createElement("div");
     divCon.setAttribute("class","container");
     main.appendChild(divCon);
@@ -307,6 +317,11 @@ function showActors(){
         //borro lo que haya en el main
         var main = document.getElementById("div-main");
         removeChildren(main);
+        
+        var tituloPag = document.createElement("h2");
+        tituloPag.appendChild(document.createTextNode("Actores"));
+        tituloPag.setAttribute("id","Ini");
+        main.appendChild(tituloPag);
 
         //Creo la tabla
         var div = document.createElement("div");
@@ -345,10 +360,13 @@ function showActors(){
             var td3 = document.createElement("td");
             tr.appendChild(td3);
             //Añado los valores a las tablas
+            var a1 = document.createElement("a");
+            td1.appendChild(a1);
+
             var ft = document.createElement("img");
             ft.setAttribute("src", actor.value.picture);
             ft.addEventListener("click", showActor(actor.value));
-            td1.appendChild(ft);
+            a1.appendChild(ft);
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(actor.value.name));
@@ -425,9 +443,13 @@ function showActor(actor) {
             fotoPro.appendChild(galeria1);
 
             //Cojo la foto de la Producción
+            var a1 = document.createElement("a");
+            a1.addEventListener("click", showProduction(production.value.Production));
+            galeria1.appendChild(a1);
+
             var imgPro = document.createElement("img");
-            imgPro.setAttribute("src", production.value.Production.image);
-            galeria1.appendChild(imgPro);
+            imgPro.setAttribute("src", production.value.Production.image );
+            a1.appendChild(imgPro);
 
             //Meto la descripción de la foto
             var desc = document.createElement("div");
@@ -453,6 +475,11 @@ function showDirectors(){
         //Borro lo que haya en el main
         var main = document.getElementById("div-main");
         removeChildren(main);
+
+        var tituloPag = document.createElement("h2");
+        tituloPag.appendChild(document.createTextNode("Directores"));
+        tituloPag.setAttribute("id","Ini");
+        main.appendChild(tituloPag);
 
         //Creo un contenedor para la tabla
         var div = document.createElement("div");
@@ -495,10 +522,13 @@ function showDirectors(){
             var td3 = document.createElement("td");
             tr.appendChild(td3);
             //Añado los valores a las tablas
+            var a1 = document.createElement("a");
+            td1.appendChild(a1);
+
             var ft = document.createElement("img");
             ft.setAttribute("src", director.value.picture);
             ft.addEventListener("click", showDirector(director.value));
-            td1.appendChild(ft);
+            a1.appendChild(ft);
 
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(director.value.name));
@@ -572,9 +602,13 @@ function showDirector(director) {
             fotoPro.appendChild(galeria1);
 
             //Cojo la foto de la Producción
+            var a1 = document.createElement("a");
+            galeria1.appendChild(a1);
+
             var imgPro = document.createElement("img");
             imgPro.setAttribute("src", production.value.image);
-            galeria1.appendChild(imgPro);
+            imgPro.addEventListener("click", showProduction(production.value));
+            a1.appendChild(imgPro);
 
             //Meto la descripción de la foto
             var desc = document.createElement("div");
@@ -638,13 +672,17 @@ function showProduction(production) {
             var col1 = document.createElement("div");
             col1.setAttribute("class", "col-sm-3");
             div_actores.appendChild(col1);
-
+            //Foto y enlace al actor
             var galeria = document.createElement("div");
             galeria.setAttribute("class", "thumbnail");
 
+            var a1 = document.createElement("a");
+            galeria.appendChild(a1);
+
             var foto = document.createElement("img");
             foto.setAttribute("src", iterador.actores[i].actor.picture);
-            galeria.appendChild(foto);
+            foto.addEventListener("click", showActor(iterador.actores[i].actor));
+            a1.appendChild(foto);
 
             var cap = document.createElement("div");
             cap.setAttribute("class", "caption");
@@ -681,9 +719,13 @@ function showProduction(production) {
             galeria2.setAttribute("class", "thumbnail");
             col2.appendChild(galeria2);
 
+            var a2 = document.createElement("a");
+            galeria2.appendChild(a2);
+
             var foto2 = document.createElement("img");
             foto2.setAttribute("src", iterador.directores[i].director.picture);
-            galeria2.appendChild(foto2);
+            foto2.addEventListener("click", showDirector(iterador.directores[i].director));
+            a2.appendChild(foto2);
 
             var cap2 = document.createElement("div");
             cap2.setAttribute("class", "caption");
@@ -792,7 +834,7 @@ function initPopulate() {
     directores.addEventListener("click", showDirectors());
 
     //Método para crear los objetos
-    objetos();
+    crearObjetos();
     //Llamo al método para poder desplegar el menu categoría
     categoriesMenuPopulate();
     //Llamo al método para que se vean las categorías en el main
