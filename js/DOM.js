@@ -209,7 +209,7 @@ function showHomePage(){
         
         //Creo un div para meterlo en columnas más pequeñas y se quede a un lado
         var fotoDiv = document.createElement("div");
-        fotoDiv.setAttribute("class", "col-sm-6");
+        fotoDiv.setAttribute("class", "col-sm-6 divFotoCar");
         cap.appendChild(fotoDiv);
 
         //Creo el carrusel
@@ -256,6 +256,7 @@ function showHomePage(){
             //Cojo la foto de la Producción
             var imgPro = document.createElement("img");
             imgPro.setAttribute("src", production.value.image);
+            imgPro.addEventListener("click", showProduction(production.value));
             divItem.appendChild(imgPro);
 
             //Div para la info
@@ -277,7 +278,7 @@ function showHomePage(){
 
         }//Fin del while de producciones
 
-        //Botones para mover el carrusel
+        //Flechas para mover el carrusel
         var lft = document.createElement("a");
         lft.setAttribute("class", "left carousel-control");
         lft.setAttribute("href", "#myCarousel");
@@ -361,6 +362,11 @@ function showActors(){
 
             actor = actors.next();
         }
+        //Explico como funciona la tabla, por si el usu no tiene ni idea ?.?
+        var p = document.createElement("p");
+        p.setAttribute("class", "notas");
+        p.appendChild(document.createTextNode("Para saber más pulse sobre la foto, nombre o apellido."));
+        div.appendChild(p);
     }
 }
 
@@ -513,7 +519,6 @@ function showDirectors(){
         div.appendChild(p);
     }
 }
-
 
 function showDirector(director) {
     return function () {
@@ -697,8 +702,9 @@ function showProduction(production) {
 }
 function showResource(production) {
     return function () {
+        //El main
         var main = document.getElementById("div-main");
-
+        //Foto de la produccion
         var divFoto = document.createElement("div");
         divFoto.setAttribute("class", "col-sm-4");
         main.appendChild(divFoto);
@@ -710,13 +716,13 @@ function showResource(production) {
         var img = document.createElement("img");
         img.setAttribute("src", production.image);
         divThumb.appendChild(img);
-
+        //La info de la producción
         var divInfo = document.createElement("div");
         divInfo.setAttribute("class", "col-sm-8");
         divInfo.setAttribute("id", "info");
-
+        //Titulo y tabla con los recursos
         var title = document.createElement("h2");
-        title.appendChild(document.createTextNode(production.title + "(" + production.publication.toLocaleDateString() + ")"));
+        title.appendChild(document.createTextNode(production.title));
         divInfo.appendChild(title);
 
         var table = document.createElement("table");
@@ -727,7 +733,7 @@ function showResource(production) {
         dur.appendChild(document.createTextNode("Duración"));
         tr1.appendChild(dur);
         var td1 = document.createElement("td");
-        td1.appendChild(document.createTextNode(production.resource.duration + " minutos."));
+        td1.appendChild(document.createTextNode(production.resource.duration));
         tr1.appendChild(td1);
 
         var tr2 = document.createElement("tr");
@@ -759,7 +765,6 @@ function showResource(production) {
         subs.appendChild(document.createTextNode("Subtitulos"));
         tr4.appendChild(subs);
         var td4 = document.createElement("td");
-
         var subtitulos = "";
         for (var i = 0; i < production.resource.subtitles.length; i++) {
             subtitulos += production.resource.subtitles[i];

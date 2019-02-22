@@ -279,6 +279,8 @@ var VideoSystem = (function () { //La función anónima devuelve un método getI
 				//Si todo va bien añado la producción.
 				var post = getProductionPosition(production);//Busco el indice del elemento que me han pasado.
 				_productions.splice(post,1);
+				//Tengo que borrar también de actores y directores, buscando quien tiene ese producción y en que 
+				// posición. (GetCast)
 				//Devuelvo el número de elementos del array de producciones.
 				return _productions.length;
 			}
